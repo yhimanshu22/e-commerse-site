@@ -23,6 +23,11 @@ export const connectDB = async () => {
     }
 };
 
+export const getConnectionCount = async () => {
+    const res = await pool.query("SELECT COUNT(*) FROM pg_stat_activity WHERE state = 'active';");
+    return res.rows[0].count;
+};
+
 export const closeDB = async () => {
     await pool.end();
     console.log("Database connection closed.");

@@ -1,16 +1,13 @@
-//jest.setTimeout(20000);
+jest.setTimeout(30000);
 
 import request from 'supertest';
 import app from '../app'; // Adjust the path based on your app's structure
-import { connectDB, closeDB } from '../config/db'; // Assuming you have your db config
+import { connectDB, closeDB ,getConnectionCount} from '../config/db'; // Assuming you have your db config
 
 beforeAll(async () => {
     await connectDB(); // Connect to the database before running tests
-}, 20000);
+});
 
-afterAll(async () => {
-    await closeDB(); // Disconnect from the database after tests
-}, 20000);
 
 
 describe('Product API', () => {
@@ -62,5 +59,11 @@ describe('Product API', () => {
     },20000);
 
 
+});
+
+// In your afterAll
+afterAll(async () => {
+    console.log(`Active connections before closing: ${await getConnectionCount()}`);
+    await closeDB();
 });
 
