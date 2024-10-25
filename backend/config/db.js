@@ -13,13 +13,19 @@ const pool = new Pool({
     port: process.env.DB_PORT,
 });
 
-// Test the database connection
-pool.connect()
-    .then(() => {
+// Optionally, you can export a method to connect if needed
+export const connectDB = async () => {
+    try {
+        await pool.connect();
         console.log("Database connection established successfully.");
-    })
-    .catch((error) => {
+    } catch (error) {
         console.error("Error connecting to the database:", error.message);
-    });
+    }
+};
+
+export const closeDB = async () => {
+    await pool.end();
+    console.log("Database connection closed.");
+};  
 
 export default pool;

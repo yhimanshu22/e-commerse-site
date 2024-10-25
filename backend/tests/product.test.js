@@ -2,12 +2,15 @@
 
 import request from 'supertest';
 import app from '../app'; // Adjust the path based on your app's structure
-import db from '../config/db'; // Assuming you have your db config
+import { connectDB, closeDB } from '../config/db'; // Assuming you have your db config
 
 beforeAll(async () => {
-    // Connect to the database before running tests
-    await db.connect();
-},20000);
+    await connectDB(); // Connect to the database before running tests
+}, 20000);
+
+afterAll(async () => {
+    await closeDB(); // Disconnect from the database after tests
+}, 20000);
 
 
 describe('Product API', () => {
@@ -61,7 +64,3 @@ describe('Product API', () => {
 
 });
 
-afterAll(async () => {
-    // Disconnect from the database after tests
-    await db.end();
-},20000);
