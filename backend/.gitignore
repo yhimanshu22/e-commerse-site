@@ -1,0 +1,19 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+
+# Database
+*.sqlite
+*.db
+
+# Test coverage reports
+coverage/
+
+# Misc
+.DS_Store
