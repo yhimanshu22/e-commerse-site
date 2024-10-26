@@ -9,12 +9,21 @@ import { User } from '../models/userModel.js'; // Assume a User model exists
 export const registerUser = async (req, res) => {
     const { username, password } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create(username, hashedPassword); // Add your user creation logic
+    try {
+        // Check if user already exists
+        const existingUser = await User.findByUsername(username);
+        if (existingUser) {
+            return res.status(400).json({ error: 'User already exists' });
+        }
 
-    res.status(201).json({ message: "User registered successfully" });
+        // Register new user
+        const newUser = await User.register(username, password);
+        res.status(201).json({ message: 'User registered successfully', user: newUser });
+    } catch (error) {
+        console.error('Error registering user:', error.message);
+        res.status(500).json({ error: 'Registration failed, please try again' });
+    }
 };
-
 // User login
 export const loginUser = async (req, res) => {
     const { username, password } = req.body;
@@ -37,27 +46,25 @@ export const getProducts = async (req, res) => {
 export const createProduct = [authenticate, async (req, res) => {
     try {
         const { name, description, price, quantity } = req.body;
-        
-        // Check if required fields are present
+
         if (!name || !description || price == null || quantity == null) {
             return res.status(400).json({ error: "All fields are required." });
         }
 
-        // Attempt to create the product
-        const result = await Product.create(name, description, price, quantity);
+        const product = await Product.create(name, description, price, quantity);
         
-        // Check if the product was created successfully
-        if (result && result.rows && result.rows[0]) {
-            return res.status(201).json({ message: "Product created successfully", product: result.rows[0] });
+        if (product) {
+            return res.status(201).json({ message: "Product created successfully", product });
         } else {
             return res.status(500).json({ error: "Product creation failed" });
         }
 
     } catch (error) {
-        // Error handling
+        console.error("Error creating product:", error);
         return res.status(500).json({ error: "Internal server error", details: error.message });
     }
 }];
+
 
 
 export const updateProduct = [authenticate,async (req, res) => {
