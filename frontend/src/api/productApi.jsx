@@ -13,13 +13,13 @@ const apiClient = axios.create({
     baseURL: API_URL,
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getAuthToken()}` // Include token in the headers
+        'Authorization': `Bearer ${getAuthToken()}` 
     }
 });
 
 // Product-related API calls
 export const fetchProducts = async () => {
-    const response = await axios.get(API_URL); // Use axios directly without auth
+    const response = await axios.get(API_URL); 
     return response.data;
 };
 
