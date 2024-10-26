@@ -23,33 +23,19 @@ function ProductForm({ productToEdit, onSubmit }) {
             let result;
             const { id, name, description, price, quantity } = product;
     
-            const priceValue = parseFloat(price);
-            const quantityValue = parseInt(quantity);
-    
-            if (isNaN(priceValue) || isNaN(quantityValue)) {
-                alert("Price and Quantity must be valid numbers.");
-                return; // Exit early to prevent the API call
-            }
-    
-            console.log("Submitting Product:", { name, description, price: priceValue, quantity: quantityValue });
-    
             if (id) {
-                result = await updateProduct(id, { name, description, price: priceValue, quantity: quantityValue });
+                result = await updateProduct(id, { name, description, price: parseFloat(price), quantity: parseInt(quantity) });
             } else {
-                result = await createProduct({ name, description, price: priceValue, quantity: quantityValue });
+                result = await createProduct({ name, description, price: parseFloat(price), quantity: parseInt(quantity) });
             }
+            console.log("Product Added/Updated:", result); 
+            onSubmit(); 
             
-            console.log("Product Added/Updated:", result); // Log the result
-            onSubmit(); // Call the onSubmit function after a successful addition
-            setProduct({ name: '', description: '', price: '', quantity: '' }); // Resetting state after submission
+            
+            window.location.reload();
         } catch (error) {
             console.error("Error submitting form:", error);
-            if (error.response) {
-                console.error("Error Response Data:", error.response.data);
-                alert(`Error: ${error.response.data.message || "Failed to submit the product. Please try again."}`);
-            } else {
-                alert("An unexpected error occurred. Please try again.");
-            }
+            alert("Failed to submit the product. Please try again."); // Inform user of error
         }
     };
     
