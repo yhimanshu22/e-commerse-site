@@ -6,8 +6,10 @@ import productRoutes from './routes/productRoutes.js';
 dotenv.config();
 const app = express();
 
-// Allow all origins
-app.use(cors({ origin: '*', credentials: true }));
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*"); // Allow all origins
+    next();
+});
 
 app.use(express.json());
 app.use('/', productRoutes);
