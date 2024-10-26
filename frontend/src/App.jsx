@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Navbar from './components/Navbar';
 
+
 function App() {
     const [productToEdit, setProductToEdit] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,6 +24,7 @@ function App() {
 
     return (
         <Router>
+          
             <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
             <Routes>
                 <Route 

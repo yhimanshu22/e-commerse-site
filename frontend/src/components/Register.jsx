@@ -6,15 +6,15 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
-    const navigate = useNavigate(); // Initialize navigate
+    const navigate = useNavigate(); 
 
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
             const response = await registerUser({ username, password });
             setMessage(response.message);
-            // Navigate to the home page upon successful registration
-            navigate('/'); // Adjust the path if your home route is different
+           
+            navigate('/login'); 
         } catch (error) {
             setMessage(error.response?.data?.error || 'Registration failed');
         }
