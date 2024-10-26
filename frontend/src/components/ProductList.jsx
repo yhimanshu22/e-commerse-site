@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { fetchProducts, deleteProduct } from '../api/productApi';
 
 function ProductList({ onEdit }) {
@@ -21,18 +22,6 @@ function ProductList({ onEdit }) {
         loadProducts();
     }, []);
 
-    const handleDelete = async (id) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this product?");
-        if (confirmDelete) {
-            try {
-                await deleteProduct(id);
-                setProducts(products.filter((product) => product.id !== id));
-            } catch (error) {
-                console.error("Error deleting product:", error);
-                setError("Failed to delete product");
-            }
-        }
-    };
 
     if (loading) return <div className="text-white">Loading products...</div>;
     if (error) {
@@ -72,12 +61,26 @@ function ProductList({ onEdit }) {
                 >
                     Edit
                 </button>
-                <button 
-                    onClick={() => handleDelete(product.id)} 
-                    className="flex-1 px-4 py-2 text-white bg-red-600 rounded hover:bg-red-700 transition"
-                >
-                    Delete
-                </button>
+                <button
+    type="button"
+    onClick={async () => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+        if (confirmDelete) {
+            try {
+                await deleteProduct(product.id); // Make sure this function is defined in your API file
+                setProducts(products.filter((p) => p.id !== product.id)); // Update the product list
+            } catch (error) {
+                console.error("Error deleting product:", error);
+                setError("Failed to delete product");
+            }
+        }
+    }}
+    className="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded"
+>
+    Delete
+</button>
+
+               
             </div>
         </div>
     ))}
@@ -86,6 +89,10 @@ function ProductList({ onEdit }) {
         </div>
     );
 }
+ProductList.propTypes = {
+    onEdit: PropTypes.func.isRequired,
+};
+
 
 export default ProductList;
 

@@ -41,7 +41,7 @@ export const Product = {
             await pool.query("DELETE FROM products WHERE id=$1", [id]);
         } catch (error) {
             console.error("Error deleting product:", error);
-            throw error; // Rethrow or handle as needed
+            throw error; 
         }
     },
 };

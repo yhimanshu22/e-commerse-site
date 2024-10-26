@@ -66,7 +66,6 @@ export const createProduct = [authenticate, async (req, res) => {
 }];
 
 
-
 export const updateProduct = [authenticate,async (req, res) => {
     const { name, description, price, quantity } = req.body;
     const result = await Product.update(req.params.id, name, description, price, quantity);

@@ -2,10 +2,14 @@ import { useState, useEffect } from 'react';
 import { createProduct, updateProduct } from '../api/productApi';
 
 function ProductForm({ productToEdit, onSubmit }) {
-    const [product, setProduct] = useState({ name: '', description: '', price: 0, quantity: 0 });
+    const [product, setProduct] = useState({ name: '', description: '', price: '', quantity: '' }); // Initialize with empty strings
 
     useEffect(() => {
-        if (productToEdit) setProduct(productToEdit);
+        if (productToEdit) {
+            setProduct(productToEdit);
+        } else {
+            setProduct({ name: '', description: '', price: '', quantity: '' }); // Reset state if no product to edit
+        }
     }, [productToEdit]);
 
     const handleChange = (e) => {
@@ -17,18 +21,38 @@ function ProductForm({ productToEdit, onSubmit }) {
         e.preventDefault();
         try {
             let result;
-            if (product.id) {
-                result = await updateProduct(product.id, product);
-            } else {
-                result = await createProduct(product);
+            const { id, name, description, price, quantity } = product;
+    
+            const priceValue = parseFloat(price);
+            const quantityValue = parseInt(quantity);
+    
+            if (isNaN(priceValue) || isNaN(quantityValue)) {
+                alert("Price and Quantity must be valid numbers.");
+                return; // Exit early to prevent the API call
             }
+    
+            console.log("Submitting Product:", { name, description, price: priceValue, quantity: quantityValue });
+    
+            if (id) {
+                result = await updateProduct(id, { name, description, price: priceValue, quantity: quantityValue });
+            } else {
+                result = await createProduct({ name, description, price: priceValue, quantity: quantityValue });
+            }
+            
             console.log("Product Added/Updated:", result); // Log the result
             onSubmit(); // Call the onSubmit function after a successful addition
-            setProduct({ name: '', description: '', price: 0, quantity: 0 });
+            setProduct({ name: '', description: '', price: '', quantity: '' }); // Resetting state after submission
         } catch (error) {
             console.error("Error submitting form:", error);
+            if (error.response) {
+                console.error("Error Response Data:", error.response.data);
+                alert(`Error: ${error.response.data.message || "Failed to submit the product. Please try again."}`);
+            } else {
+                alert("An unexpected error occurred. Please try again.");
+            }
         }
     };
+    
 
     return (
         <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded-lg shadow-md">
