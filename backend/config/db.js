@@ -5,6 +5,7 @@ dotenv.config();
 
 const { Pool } = pkg;
 
+
 const pool = new Pool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -12,6 +13,8 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
 });
+
+
 const createTables = async () => {
     try {
         // Example for creating tables and triggers
@@ -44,7 +47,7 @@ export const connectDB = async () => {
     try {
         const client = await pool.connect();
         console.log("Database connection established successfully.");
-        client.release(); // Release the client after initial connection check
+        client.release(); 
         
         // Create tables if they don't exist
         await createTables();
