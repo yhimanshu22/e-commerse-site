@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://e-commerse-site-m1a3.onrender.com'; // Base URL for the API
+const API_URL = import.meta.env.API_URL // Base URL for the API
 
 // Get the token from localStorage
 const getAuthToken = () => {
