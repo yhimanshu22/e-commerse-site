@@ -7,9 +7,7 @@ dotenv.config();
 const app = express();
 
 const allowedOrigins = [
-    'https://e-commerse-site-seven.vercel.app',
-    'https://e-commerse-site-git-main-yhimanshu220456.vercel.app',
-    'https://e-commerse-site-62wqm2oc0-yhimanshu220456.vercel.app'
+    'https://e-commerse-site-seven.vercel.app/'
 ];
 
 const corsOptions = {
