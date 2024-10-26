@@ -6,10 +6,8 @@ import productRoutes from './routes/productRoutes.js';
 dotenv.config();
 const app = express();
 
-app.use(cors({
-    origin: 'https://e-commerse-site-seven.vercel.app/',
-    credentials: true
-}));
+// Allow all origins
+app.use(cors({ origin: '*', credentials: true }));
 
 app.use(express.json());
 app.use('/', productRoutes);
