@@ -21,7 +21,7 @@ const createTables = async () => {
             username VARCHAR(255) UNIQUE NOT NULL,
             password VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `;
 
@@ -33,13 +33,32 @@ const createTables = async () => {
             price DECIMAL(10, 2) NOT NULL,
             quantity INT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+    `;
+
+    const updateTriggerFunction = `
+        CREATE OR REPLACE FUNCTION update_updated_at_column()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            NEW.updated_at = NOW();
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql;
+    `;
+
+    const triggerQuery = `
+        CREATE TRIGGER update_products_updated_at
+        BEFORE UPDATE ON products
+        FOR EACH ROW
+        EXECUTE PROCEDURE update_updated_at_column();
     `;
 
     try {
         await pool.query(usersQuery);
         await pool.query(productsQuery);
+        await pool.query(updateTriggerFunction);
+        await pool.query(triggerQuery);
         console.log('Users and products tables created successfully.');
     } catch (error) {
         console.error('Error creating tables:', error);
