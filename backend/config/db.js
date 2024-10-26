@@ -12,56 +12,30 @@ const pool = new Pool({
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
 });
-
-// Function to create users and products tables
 const createTables = async () => {
-    const usersQuery = `
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            username VARCHAR(255) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-    `;
-
-    const productsQuery = `
-        CREATE TABLE IF NOT EXISTS products (
-            id SERIAL PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            description TEXT,
-            price DECIMAL(10, 2) NOT NULL,
-            quantity INT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-    `;
-
-    const updateTriggerFunction = `
-        CREATE OR REPLACE FUNCTION update_updated_at_column()
-        RETURNS TRIGGER AS $$
-        BEGIN
-            NEW.updated_at = NOW();
-            RETURN NEW;
-        END;
-        $$ LANGUAGE plpgsql;
-    `;
-
-    const triggerQuery = `
-        CREATE TRIGGER update_products_updated_at
-        BEFORE UPDATE ON products
-        FOR EACH ROW
-        EXECUTE PROCEDURE update_updated_at_column();
-    `;
-
     try {
-        await pool.query(usersQuery);
-        await pool.query(productsQuery);
-        await pool.query(updateTriggerFunction);
-        await pool.query(triggerQuery);
-        console.log('Users and products tables created successfully.');
+        // Example for creating tables and triggers
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS products (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255),
+                price NUMERIC,
+                created_at TIMESTAMPTZ DEFAULT NOW(),
+                updated_at TIMESTAMPTZ DEFAULT NOW()
+            );
+            
+            DO $$
+            BEGIN
+                IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'update_products_updated_at') THEN
+                    CREATE TRIGGER update_products_updated_at
+                    BEFORE UPDATE ON products
+                    FOR EACH ROW
+                    EXECUTE FUNCTION update_timestamp();
+                END IF;
+            END $$;
+        `);
     } catch (error) {
-        console.error('Error creating tables:', error);
+        console.error("Error creating tables:", error.message);
     }
 };
 
