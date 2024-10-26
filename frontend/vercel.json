@@ -1,0 +1,17 @@
+{
+    "rewrites": [
+      {
+        "source": "/products/(.*)",
+        "destination": "https://e-commerse-site-m1a3.onrender.com/products/$1"
+      },
+      {
+        "source": "/register",
+        "destination": "https://e-commerse-site-m1a3.onrender.com/register"
+      },
+      {
+        "source": "/login",
+        "destination": "https://e-commerse-site-m1a3.onrender.com/login"
+      }
+    ]
+  }
+  
