@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://e-commerse-site-m1a3.onrender.com/products';
 const AUTH_URL = 'https://e-commerse-site-m1a3.onrender.com';
-
 
 // Get the token from localStorage
 const getAuthToken = () => {
@@ -11,31 +9,31 @@ const getAuthToken = () => {
 
 // Set up axios instance for authenticated requests
 const apiClient = axios.create({
-    baseURL: API_URL,
+    baseURL: AUTH_URL,
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getAuthToken()}` 
+        'Authorization': `Bearer ${getAuthToken()}`
     }
 });
 
 // Product-related API calls
 export const fetchProducts = async () => {
-    const response = await axios.get(API_URL); 
+    const response = await axios.get(`${AUTH_URL}/products`);
     return response.data;
 };
 
 export const createProduct = async (product) => {
-    const response = await apiClient.post('/', product);
+    const response = await apiClient.post('/products', product);
     return response.data;
 };
 
 export const updateProduct = async (id, product) => {
-    const response = await apiClient.put(`/${id}`, product);
+    const response = await apiClient.put(`/products/${id}`, product);
     return response.data;
 };
 
 export const deleteProduct = async (id) => {
-    const response = await apiClient.delete(`/${id}`);
+    const response = await apiClient.delete(`/products/${id}`);
     if (response.status !== 204) {
         throw new Error('Failed to delete product');
     }
