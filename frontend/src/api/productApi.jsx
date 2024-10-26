@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/products';
-const AUTH_URL = 'http://localhost:5000';
+const API_URL = 'https://e-commerse-site-m1a3.onrender.com/products';
+const AUTH_URL = 'https://e-commerse-site-m1a3.onrender.com';
 
 // Get the token from localStorage
 const getAuthToken = () => {
