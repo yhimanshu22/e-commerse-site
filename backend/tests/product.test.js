@@ -2,28 +2,28 @@ jest.setTimeout(50000);
 
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
-import app from '../app'; // Adjust the path based on your app's structure
-import { connectDB, closeDB, getConnectionCount } from '../config/db'; // Adjust the path based on your structure
+import app from '../app'; 
+import { connectDB, closeDB, getConnectionCount } from '../config/db'; 
 
-// Mock user data and token generation
+// Mock user data 
 const testUser = {
     id: 1,
     username: 'testuser' 
-}; // Adjust user data as needed for your auth
-const token = jwt.sign(testUser, process.env.JWT_SECRET, { expiresIn: '1h' }); // Generates a token for testing
+}; 
+const token = jwt.sign(testUser, process.env.JWT_SECRET, { expiresIn: '1h' }); 
 
 beforeAll(async () => {
-    await connectDB(); // Connect to the database before running tests
+    await connectDB(); 
 });
 
 describe('Product API', () => {
     let productId;
-
+    
     // Test for creating a product
     test('POST /products - Create a product', async () => {
         const response = await request(app)
             .post('/products')
-            .set('Authorization', `Bearer ${token}`) // Include token in header
+            .set('Authorization', `Bearer ${token}`) 
             .send({
                 name: 'Test Product',
                 description: 'This is a test product.',
@@ -48,7 +48,7 @@ describe('Product API', () => {
     test('PUT /products/:id - Update a product', async () => {
         const response = await request(app)
             .put(`/products/${productId}`)
-            .set('Authorization', `Bearer ${token}`) // Include token in header
+            .set('Authorization', `Bearer ${token}`) 
             .send({
                 name: 'Updated Test Product',
                 description: 'This is an updated test product.',
@@ -64,7 +64,7 @@ describe('Product API', () => {
     test('DELETE /products/:id - Delete a product', async () => {
         const response = await request(app)
             .delete(`/products/${productId}`)
-            .set('Authorization', `Bearer ${token}`); // Include token in header
+            .set('Authorization', `Bearer ${token}`);
 
         expect(response.statusCode).toBe(204);
     }, 20000);
