@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.API_URL // Base URL for the API
+const API_URL = 'https://e-commerse-site-m1a3.onrender.com/products';
+const AUTH_URL = 'https://e-commerse-site-m1a3.onrender.com';
+
 
 // Get the token from localStorage
 const getAuthToken = () => {
@@ -9,31 +11,31 @@ const getAuthToken = () => {
 
 // Set up axios instance for authenticated requests
 const apiClient = axios.create({
-    baseURL: API_URL, // Base URL for the authenticated requests
+    baseURL: API_URL,
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getAuthToken()}`
+        'Authorization': `Bearer ${getAuthToken()}` 
     }
 });
 
 // Product-related API calls
 export const fetchProducts = async () => {
-    const response = await axios.get(`${API_URL}/products`); // Fetch products
+    const response = await axios.get(API_URL); 
     return response.data;
 };
 
 export const createProduct = async (product) => {
-    const response = await apiClient.post('/products', product); // Create a product
+    const response = await apiClient.post('/', product);
     return response.data;
 };
 
 export const updateProduct = async (id, product) => {
-    const response = await apiClient.put(`/products/${id}`, product); // Update a product by ID
+    const response = await apiClient.put(`/${id}`, product);
     return response.data;
 };
 
 export const deleteProduct = async (id) => {
-    const response = await apiClient.delete(`/products/${id}`); // Delete a product by ID
+    const response = await apiClient.delete(`/${id}`);
     if (response.status !== 204) {
         throw new Error('Failed to delete product');
     }
@@ -42,11 +44,11 @@ export const deleteProduct = async (id) => {
 
 // User authentication API calls
 export const registerUser = async (userData) => {
-    const response = await axios.post(`${API_URL}/register`, userData); // Register a user
+    const response = await axios.post(`${AUTH_URL}/register`, userData);
     return response.data;
 };
 
 export const loginUser = async (userData) => {
-    const response = await axios.post(`${API_URL}/login`, userData); // Login a user
+    const response = await axios.post(`${AUTH_URL}/login`, userData);
     return response.data;
 };
