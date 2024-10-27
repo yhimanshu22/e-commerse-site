@@ -72,7 +72,23 @@ export const updateProduct = [authenticate,async (req, res) => {
     res.json(result.rows[0]);
 }];
 
-export const deleteProduct = [authenticate,async (req, res) => {
-    await Product.delete(req.params.id);
-    res.sendStatus(204);
-}];
+export const deleteProduct = [
+    authenticate,
+    async (req, res) => {
+        try {
+            const { id } = req.params;
+            const deleteResult = await Product.delete(id);
+
+            // Check if product exists and was deleted
+            if (!deleteResult.rowCount) {
+                return res.status(404).json({ error: "Product not found or already deleted" });
+            }
+
+            // Successful deletion
+            res.sendStatus(204);
+        } catch (error) {
+            console.error("Error deleting product:", error);
+            res.status(500).json({ error: "Internal server error" });
+        }
+    }
+];
